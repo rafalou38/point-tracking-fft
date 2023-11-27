@@ -18,4 +18,4 @@ Programme de tracking, visualisation et modélisation pour les olympiades de phy
  
 [▶️ Video](<18-nov/18nov-libre plastique-3g0-2aimants.avi>)
 
-![Alt text](<18-nov/18nov-libre plastique-3g0-2aimants.avi.png>)   
+![Alt text](<18-nov/18nov-libre plastique-3g0-2aimants.avi.png>)    
