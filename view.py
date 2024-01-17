@@ -11,7 +11,6 @@ def expAmortie(t, a, tau, f0, phi, b):
 
 
 def lorentz(x, amplitude, f0, df):
-    # \frac{a}{\sqrt{1+\left(\frac{\left(x-f_{0}\right)}{\frac{d}{2}}\right)^{2}}}
     return amplitude / np.sqrt(1 + ((x - f0) / (df / 2)) ** 2)
 
 
@@ -32,18 +31,20 @@ def viewData(file, withModel=True, withFFT=True):
             print("Modélisation exponentielle amortie")
             expOpts, _ = curve_fit(
                 expAmortie,
-                np.abs(df["t"]),
-                np.abs(df["y"]),
-                [
+                np.array(np.abs(df["t"])),
+                np.array(np.abs(df["y"])),
+                np.array([
                     -16.5,  # a
                     2.3,  # tau
                     7.8,  # f0
                     -0.1,  # phi
                     97,  # b
-                ],
+                ]),
             )
-            plt.plot(df["t"], expAmortie(df["t"], *expOpts), "r-", linewidth=1)
-        except:
+            plt.plot(np.array(df["t"]), expAmortie(np.array(df["t"]), *expOpts), "r-", linewidth=1)
+        except Exception as e:
+            print(e)
+            print("Erreur modélisation exponentielle amortie")
             pass
 
     plt.title("Y en fonction de t")
@@ -62,7 +63,8 @@ def viewData(file, withModel=True, withFFT=True):
             yf = scipy.fftpack.fft(df["y"])
             xf = np.fft.fftfreq(len(yf), df["t"][1] - df["t"][0])[FT_LO:FT_HI]
             yf = yf[FT_LO:FT_HI]
-
+            np.savetxt(file + ".raw-fft.csv", np.column_stack((np.abs(xf), np.abs(yf))), delimiter=',', header='x,y', comments='')
+            
             plt.scatter(np.abs(xf), np.abs(yf), linewidth=1, s=6, marker="x")
             plt.title("Transformée de Fourier de y")
             plt.xlabel("Fréquence (Hz)")
@@ -72,6 +74,8 @@ def viewData(file, withModel=True, withFFT=True):
                 xm = np.linspace(3, 16, 1000)
                 lorentzOpts, _ = curve_fit(lorentz, np.abs(xf), np.abs(yf))
                 ym = lorentz(np.abs(xm), *lorentzOpts)
+                np.savetxt(file + ".fft.csv", np.column_stack((xm,ym)), delimiter=',', header='x,y', comments='')
+
                 amplitude, f0, df = lorentzOpts
                 plt.annotate(
                     f"f(f)=a/sqrt(1+((f-f0)/(Δf/2))^2)\n\na = {amplitude:.2f}\nf₀ = {f0:.2f}\nΔf = {df:.2f}",
