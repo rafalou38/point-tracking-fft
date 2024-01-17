@@ -2,16 +2,15 @@ import cv2
 import numpy as np
 
 def track(file_path):
-    
-
     cap = cv2.VideoCapture(file_path)
 
-    TARGET = np.array([245, 252, 251])
-    # TARGET = np.array([146, 164, 254])
+    # TARGET = np.array([245, 252, 251])
+    TARGET = np.array([146, 164, 254])
+
+    
     THRESHOLD = 30
     lower_red = TARGET - THRESHOLD
     upper_red = TARGET + THRESHOLD
-
     # lower_red = np.array([130, 115, 200])
     # upper_red = np.array([180, 200, 255])
 
